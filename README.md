@@ -63,10 +63,10 @@ defmodule MyPlugRouter do
 end
 ```
 
-When new http request comes, and it's **METHOD** and **PATH** pair is not included :skip option,
-Tracing is automatically started with the name which you passed with :name option.
+When new http request comes, and it's **METHOD** and **PATH** pair is not included `:skip` option,
+Tracing is automatically started with the name which you passed with `:name` option.
 
-If the incoming request has valid 'X-Amzn-Trace-Id' header,
+If the incoming request has valid **X-Amzn-Trace-Id** header,
 it tries to keep parent **Trace**, or else, it starts a new **Trace**.
 
 ## SEE ALSO

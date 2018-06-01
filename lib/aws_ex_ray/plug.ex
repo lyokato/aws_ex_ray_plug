@@ -60,7 +60,12 @@ defmodule AwsExRay.Plug do
 
         status = conn.status
 
-        content_length = byte_size(conn.resp_body)
+        content_length =
+          if is_binary(conn.resp_body) do
+            byte_size(conn.resp_body)
+          else
+            :erlang.iolist_size(conn.resp_body)
+          end
 
         response_record =
           HTTPResponse.new(status, content_length)
