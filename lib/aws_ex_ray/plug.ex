@@ -1,5 +1,45 @@
 defmodule AwsExRay.Plug do
 
+  @moduledoc ~S"""
+
+  ## USAGE
+
+  In your router, set `AwsExRay.Plug`.
+
+  ```elixir
+  defmodule MyPlugRouter do
+
+    use Plug.Router
+
+    plug AwsExRay.Plug, name: "my-xray", skip: [{:get, "/bar"}]
+
+    plug :match
+    plug :dispatch
+
+    get "/foo" do
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, Poison.encode!(%{body: "Hello, Foo"}))
+    end
+
+    get "/bar" do
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, Poison.encode!(%{body: "Hello, Bar"}))
+    end
+
+  end
+  ```
+
+  When new http request comes, and it's **METHOD** and **PATH** pair is not included `:skip` option,
+  Tracing is automatically started with the name which you passed with `:name` option.
+
+  If the incoming request has valid **X-Amzn-Trace-Id** header,
+  it tries to take over parent **Trace**, or else, it starts a new **Trace**.
+
+
+  """
+
   import Plug.Conn
 
   alias AwsExRay.Plug.Paths
@@ -60,7 +100,7 @@ defmodule AwsExRay.Plug do
 
         status = conn.status
 
-        content_length = byte_size(conn.resp_body)
+        content_length = get_response_content_length(conn)
 
         response_record =
           HTTPResponse.new(status, content_length)
@@ -164,10 +204,15 @@ defmodule AwsExRay.Plug do
   end
 
   defp get_response_content_length(conn) do
-    case get_resp_header(conn, "content-length") do
-      []        -> 0
-      [value|_] -> String.to_integer(value)
+    if is_binary(conn.resp_body) do
+      byte_size(conn.resp_body)
+    else
+      :erlang.iolist_size(conn.resp_body)
     end
+    #case get_resp_header(conn, "content-length") do
+    #  []        -> 0
+    #  [value|_] -> String.to_integer(value)
+    #end
   end
 
   defp can_skip_tracing(conn, opts) do
