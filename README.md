@@ -67,7 +67,7 @@ When new http request comes, and it's **METHOD** and **PATH** pair is not includ
 Tracing is automatically started with the name which you passed with `:name` option.
 
 If the incoming request has valid **X-Amzn-Trace-Id** header,
-it tries to keep parent **Trace**, or else, it starts a new **Trace**.
+it tries to take over parent **Trace**, or else, it starts a new **Trace**.
 
 ## SEE ALSO
 
