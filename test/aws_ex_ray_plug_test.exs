@@ -28,7 +28,7 @@ defmodule AwsExRayPlugTest do
 
     end)
 
-    conn = conn(:get, "/foo")
+    conn = conn(:get, "/foo?a=b")
          |> put_req_header("content-type", "application/json")
 
     conn = Router.call(conn, @opts)
