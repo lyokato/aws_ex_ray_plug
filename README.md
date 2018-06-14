@@ -23,8 +23,8 @@ end
 
 def deps do
   [
-    {:aws_ex_ray, "~> 0.1.0"},
-    {:aws_ex_ray_plug, "~> 0.1.0"},
+    {:aws_ex_ray, "~> 0.1"},
+    {:aws_ex_ray_plug, "~> 0.1.1"},
      # ...
   ]
 end

@@ -84,10 +84,15 @@ defmodule AwsExRay.Plug do
 
       {addr, forwarded} = find_client_ip(conn)
 
+      url = conn
+            |> request_url()
+            |> String.split("?")
+            |> List.first
+
       request_record = %HTTPRequest{
         segment_type:    :segment,
         method:          conn.method,
-        url:             request_url(conn),
+        url:             url,
         user_agent:      get_user_agent(conn),
         client_ip:       addr,
         x_forwarded_for: forwarded
