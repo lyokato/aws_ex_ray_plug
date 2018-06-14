@@ -24,7 +24,7 @@ defmodule AwsExRayPlug.MixProject do
 
   defp deps do
     [
-      {:aws_ex_ray, "~> 0.1"},
+      {:aws_ex_ray, "~> 0.1.12"},
       {:ex_doc, "~> 0.15", only: :dev, runtime: false},
       {:struct_assert, "~> 0.5.2", only: :test},
       {:mox, "~> 0.3.2", only: :test},
