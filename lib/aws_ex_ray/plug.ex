@@ -209,15 +209,12 @@ defmodule AwsExRay.Plug do
   end
 
   defp get_response_content_length(conn) do
-    if is_binary(conn.resp_body) do
-      byte_size(conn.resp_body)
-    else
-      :erlang.iolist_size(conn.resp_body)
+    body = conn.resp_body
+    cond do
+      is_binary(body) -> byte_size(body)
+      is_list(body) -> :erlang.iolist_size(body)
+      true -> 0
     end
-    #case get_resp_header(conn, "content-length") do
-    #  []        -> 0
-    #  [value|_] -> String.to_integer(value)
-    #end
   end
 
   defp can_skip_tracing(conn, opts) do
